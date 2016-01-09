@@ -1,0 +1,6 @@
+tomcat:
+  image: softwarelabsit/softwarelabsit-bank
+  ports:
+    - "4800:8080"
+  volumes:
+    - "./docker/log:/var/log/tomcat"

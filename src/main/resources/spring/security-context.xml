@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:security="http://www.springframework.org/schema/security"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		        http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
+                http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.1.xsd">
+
+    <bean id="passwordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder">
+        <constructor-arg value="13"/>
+    </bean>
+
+    <context:component-scan base-package="it.softwarelabs.bank.application.security"/>
+
+    <security:authentication-manager>
+        <security:authentication-provider user-service-ref="bankUserDetails">
+            <security:password-encoder ref="passwordEncoder"/>
+        </security:authentication-provider>
+    </security:authentication-manager>
+
+    <security:http use-expressions="true">
+        <security:intercept-url pattern="/static/**" access="permitAll"/>
+        <security:intercept-url pattern="/webjars/**" access="permitAll"/>
+        <security:intercept-url pattern="/login" access="permitAll"/>
+        <security:intercept-url pattern="/register" access="permitAll"/>
+        <security:intercept-url pattern="/**" access="isAuthenticated()"/>
+
+        <security:form-login login-page="/login" default-target-url="/"/>
+        <security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true"/>
+    </security:http>
+
+    <security:global-method-security secured-annotations="enabled"/>
+</beans>

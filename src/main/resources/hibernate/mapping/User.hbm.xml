@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="it.softwarelabs.bank.domain.user" default-access="field">
+    <class name="User" table="user">
+        <composite-id name="id" class="UserId">
+            <key-property name="id"/>
+        </composite-id>
+        <component name="fullName" class="FullName">
+            <property name="firstName"/>
+            <property name="lastName"/>
+        </component>
+        <component name="email" class="Email">
+            <property name="email"/>
+        </component>
+        <component name="passwordHash" class="it.softwarelabs.bank.domain.user.PasswordHash">
+            <property name="value" column="password"/>
+        </component>
+    </class>
+</hibernate-mapping>

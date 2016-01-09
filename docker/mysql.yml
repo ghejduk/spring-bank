@@ -1,0 +1,11 @@
+mysql:
+  image: mysql
+  container_name: bank_mysql
+  net: "bank"
+  ports:
+    - "4801:3306"
+  volumes:
+    - "./mysql:/var/lib/mysql"
+  environment:
+    MYSQL_ROOT_PASSWORD: 123
+    MYSQL_DATABASE: bank
