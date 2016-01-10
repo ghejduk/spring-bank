@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="it.softwarelabs.bank.domain.account" default-access="field">
+    <class name="Account" table="account">
+        <composite-id name="number" class="Number">
+            <key-property name="number"/>
+        </composite-id>
+        <many-to-one name="owner" column="owner_id" class="it.softwarelabs.bank.domain.user.User"/>
+
+        <component name="balance" class="Balance">
+            <property name="value" column="balance"/>
+        </component>
+    </class>
+</hibernate-mapping>

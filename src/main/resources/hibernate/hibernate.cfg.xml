@@ -8,5 +8,6 @@
         <property name="dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>
         <mapping resource="hibernate/mapping/User.hbm.xml"/>
+        <mapping resource="hibernate/mapping/Account.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

@@ -1,8 +1,13 @@
 package it.softwarelabs.bank.domain.account;
 
-public class Number {
+import java.io.Serializable;
+
+public class Number implements Serializable {
 
     private String number;
+
+    protected Number() {
+    }
 
     public Number(String number) throws IllegalArgumentException {
         if (!number.matches("^[A-Z0-9]*$")) {

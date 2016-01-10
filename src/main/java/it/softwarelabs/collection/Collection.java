@@ -2,9 +2,11 @@ package it.softwarelabs.collection;
 
 import it.softwarelabs.sort.SortDirection;
 
+import java.util.List;
+
 public interface Collection<T> {
 
-    T[] all();
+    List<T> all();
 
     Collection<T> slice(int from, int size);
 

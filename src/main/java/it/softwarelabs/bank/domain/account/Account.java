@@ -10,6 +10,9 @@ public class Account {
     private User owner;
     private Balance balance;
 
+    protected Account() {
+    }
+
     private Account(Number number, User owner, Money deposit) {
         this.number = number;
         this.owner = owner;

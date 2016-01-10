@@ -5,3 +5,7 @@ form .text-danger {
 .footer {
     padding: 2em 0;
 }
+
+h3.panel-title {
+    display: inline-block;
+}

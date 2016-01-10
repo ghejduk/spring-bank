@@ -8,6 +8,9 @@ public class Balance {
         this.value = value;
     }
 
+    protected Balance() {
+    }
+
     public Double toDouble() {
         return value;
     }

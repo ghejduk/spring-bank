@@ -7,7 +7,16 @@
 
 <layout:base title="List">
     <jsp:attribute name="body">
-        <h1>So far, so good :)</h1>
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Accounts</h3>
+                <a href="<c:url value="/account/create"/>" class="pull-right">Create new account</a>
+            </div>
+
+            <div class="panel-body">
+                :)
+            </div>
+        </div>
     </jsp:attribute>
 </layout:base>
 
