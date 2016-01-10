@@ -19,8 +19,4 @@ public class UniqueEmail {
     public static boolean isAvailable(String email) {
         return null == userRepository.findByEmail(new Email(email));
     }
-
-    public static User user(String email) {
-        return userRepository.findByEmail(new Email(email));
-    }
 }
