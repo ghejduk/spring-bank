@@ -1,6 +1,7 @@
 package it.softwarelabs.bank.application.domain.user.constraints;
 
 import it.softwarelabs.bank.domain.user.Email;
+import it.softwarelabs.bank.domain.user.User;
 import it.softwarelabs.bank.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,5 +18,9 @@ public class UniqueEmail {
 
     public static boolean isAvailable(String email) {
         return null == userRepository.findByEmail(new Email(email));
+    }
+
+    public static User user(String email) {
+        return userRepository.findByEmail(new Email(email));
     }
 }

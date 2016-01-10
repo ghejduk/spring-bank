@@ -12,10 +12,14 @@
 
     <mvc:resources mapping="/static/**" location="/resources/"/>
     <mvc:resources mapping="/webjars/**" location="/webjars/"/>
-    <mvc:annotation-driven/>
+    <mvc:annotation-driven>
+        <mvc:argument-resolvers>
+            <ref bean="userResolver"/>
+        </mvc:argument-resolvers>
+    </mvc:annotation-driven>
 
     <aop:aspectj-autoproxy/>
-    <!--<context:component-scan base-package="it.softwarelabs.bank.application.aop"/>-->
+    <!--<context:component-scan base-package="it.softwarelabs.bank.application"/>-->
 
     <bean id="jspViewResolver"
           class="org.springframework.web.servlet.view.InternalResourceViewResolver"

@@ -14,7 +14,22 @@
             </div>
 
             <div class="panel-body">
-                :)
+                <table class="table table-striped">
+                    <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Balance</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <c:forEach var="account" items="${accounts}">
+                        <tr>
+                            <td>${account.number}</td>
+                            <td>${account.balance.toDouble()}</td>
+                        </tr>
+                    </c:forEach>
+                    </tbody>
+                </table>
             </div>
         </div>
     </jsp:attribute>

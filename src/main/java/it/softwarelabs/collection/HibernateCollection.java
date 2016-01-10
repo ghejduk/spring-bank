@@ -1,50 +1,47 @@
 package it.softwarelabs.collection;
 
 import it.softwarelabs.sort.SortDirection;
-import org.hibernate.Criteria;
 import org.hibernate.criterion.Order;
 
 import java.util.List;
 
-public class HibernateCollection<T> implements Collection<T> {
+public class HibernateCollection<E> implements Collection<E> {
 
-    private Criteria criteria;
+    private List<E> list;
 
-    public HibernateCollection(Criteria criteria) {
-        this.criteria = criteria;
+    public HibernateCollection(List<E> list) {
+        this.list = list;
     }
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> all() {
-        return criteria.list();
+    public List<E> all() {
+        return list;
     }
 
     @Override
-    public Collection<T> slice(int from, int size) {
-        criteria.setFirstResult(from);
-        criteria.setMaxResults(size);
-        return new HibernateCollection<>(criteria);
+    public Collection<E> slice(int from, int size) {
+        return new HibernateCollection<>(list);
     }
 
     @Override
-    public Collection<T> slice(int size) {
+    public Collection<E> slice(int size) {
         return slice(0, size);
     }
 
     @Override
-    public Collection<T> sort(String property, SortDirection direction) {
-        if (direction == SortDirection.ASC) {
-            criteria.addOrder(Order.asc(property));
-        } else {
-            criteria.addOrder(Order.desc(property));
-        }
+    public Collection<E> sort(String property, SortDirection direction) {
+//        if (direction == SortDirection.ASC) {
+//            criteria.addOrder(Order.asc(property));
+//        } else {
+//            criteria.addOrder(Order.desc(property));
+//        }
 
-        return new HibernateCollection<>(criteria);
+        return new HibernateCollection<>(list);
     }
 
     @Override
-    public Collection<T> sort(String property) {
+    public Collection<E> sort(String property) {
         return sort(property, SortDirection.ASC);
     }
 }

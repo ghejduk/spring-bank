@@ -31,10 +31,11 @@ public final class HibernateAccountRepository implements AccountRepository {
                 .uniqueResult();
     }
 
+    @SuppressWarnings("unchecked")
     public Collection<Account> findByOwner(User owner) {
         Criteria criteria = session().createCriteria(Account.class);
         criteria.add(Restrictions.eq("owner", owner));
-        return new HibernateCollection<>(criteria);
+        return new HibernateCollection<>(criteria.list());
     }
 
     public void add(Account account) {
