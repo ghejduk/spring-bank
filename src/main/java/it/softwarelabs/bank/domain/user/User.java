@@ -52,15 +52,5 @@ public class User {
     public PasswordHash passwordHash() {
         return passwordHash;
     }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", email=" + email +
-                ", fullName=" + fullName +
-                ", passwordHash=" + passwordHash +
-                '}';
-    }
 }
 
