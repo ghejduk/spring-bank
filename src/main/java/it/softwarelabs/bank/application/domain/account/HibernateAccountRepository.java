@@ -33,9 +33,10 @@ public final class HibernateAccountRepository implements AccountRepository {
 
     @SuppressWarnings("unchecked")
     public Collection<Account> findByOwner(User owner) {
-        Criteria criteria = session().createCriteria(Account.class);
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Account.class);
         criteria.add(Restrictions.eq("owner", owner));
-        return new HibernateCollection<>(criteria.list());
+        return new HibernateCollection<>(session, criteria);
     }
 
     public void add(Account account) {
