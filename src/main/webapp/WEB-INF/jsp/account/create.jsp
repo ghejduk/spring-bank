@@ -14,7 +14,7 @@
             </div>
 
             <div class="panel-body">
-                <form:form commandName="accountForm" method="post">
+                <form:form commandName="createAccountForm" method="post">
                     <c:if test="${not empty bindingResult}" var="resultIsSet"/>
 
                     <c:if test="${resultIsSet && bindingResult.hasFieldErrors('balance')}" var="balanceHasErrors"/>

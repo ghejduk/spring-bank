@@ -15,8 +15,12 @@ import java.security.Principal;
 @Controller
 public class CreateAccountController {
 
-    @Autowired
     private CreateAccount createAccount;
+
+    @Autowired
+    public CreateAccountController(CreateAccount createAccount) {
+        this.createAccount = createAccount;
+    }
 
     @RequestMapping(value = "/account/create", method = RequestMethod.GET)
     public String create(CreateAccountForm form, Model model) {
@@ -27,14 +31,14 @@ public class CreateAccountController {
     @RequestMapping(value = "/account/create", method = RequestMethod.POST)
     public String create(Model model, @Valid CreateAccountForm form, BindingResult result,
                          RedirectAttributes redirectAttributes, Principal principal) {
-        if (!result.hasErrors()) {
-            createAccount.open(principal.getName(), form.getBalance());
-            redirectAttributes.addFlashAttribute("successMessage", "Account has been created.");
-            return "redirect:/";
+        if (result.hasErrors()) {
+            model.addAttribute("createAccountForm", form);
+            model.addAttribute("bindingResult", result);
+            return "account/create";
         }
 
-        model.addAttribute("accountForm", form);
-        model.addAttribute("bindingResult", result);
-        return "account/create";
+        createAccount.open(principal.getName(), form.getBalance());
+        redirectAttributes.addFlashAttribute("successMessage", "Account has been created.");
+        return "redirect:/";
     }
 }
