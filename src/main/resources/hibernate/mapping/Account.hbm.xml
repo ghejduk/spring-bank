@@ -8,7 +8,7 @@
         <composite-id name="number" class="Number">
             <key-property name="number"/>
         </composite-id>
-        <many-to-one name="owner" column="owner_id" class="it.softwarelabs.bank.domain.user.User"/>
+        <many-to-one name="owner" column="owner_id" class="it.softwarelabs.bank.domain.user.User" lazy="false"/>
 
         <component name="balance" class="Balance">
             <property name="value" column="balance"/>

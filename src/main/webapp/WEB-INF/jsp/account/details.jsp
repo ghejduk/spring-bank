@@ -9,29 +9,14 @@
     <jsp:attribute name="body">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <h3 class="panel-title">Accounts</h3>
+                <h3 class="panel-title">Account <c:out value="${account.number}"/></h3>
                 <a href="<c:url value="/account/create"/>" class="pull-right">Create new account</a>
             </div>
 
             <div class="panel-body">
-                <table class="table table-striped">
-                    <thead>
-                    <tr>
-                        <th>Number</th>
-                        <th>Balance</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <c:forEach var="account" items="${accounts}">
-                        <tr>
-                            <td>
-                                <a href="<c:url value="/account/${account.number}"/>">${account.number}</a>
-                            </td>
-                            <td>${account.balance.toDouble()}</td>
-                        </tr>
-                    </c:forEach>
-                    </tbody>
-                </table>
+                <div class="alert alert-success" role="alert">
+                    <h3>${account.balance.toDouble()}</h3>
+                </div>
             </div>
         </div>
     </jsp:attribute>

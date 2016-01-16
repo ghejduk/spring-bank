@@ -30,5 +30,17 @@
         <security:logout logout-url="/logout" logout-success-url="/" invalidate-session="true"/>
     </security:http>
 
-    <security:global-method-security secured-annotations="enabled"/>
+    <security:global-method-security secured-annotations="enabled" pre-post-annotations="enabled">
+        <security:expression-handler ref="expressionHandler"/>
+    </security:global-method-security>
+
+    <bean id="expressionHandler"
+          class="org.springframework.security.access.expression.method.DefaultMethodSecurityExpressionHandler">
+        <property name="permissionEvaluator" ref="numberPermissionEvaluator"/>
+    </bean>
+
+    <bean id="numberPermissionEvaluator"
+          class="it.softwarelabs.bank.application.domain.account.NumberPermissionEvaluator">
+        <constructor-arg ref="hibernateAccountRepository"/>
+    </bean>
 </beans>

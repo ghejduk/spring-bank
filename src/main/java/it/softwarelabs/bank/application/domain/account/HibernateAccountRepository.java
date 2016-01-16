@@ -25,7 +25,7 @@ public final class HibernateAccountRepository implements AccountRepository {
         this.sessionFactory = sessionFactory;
     }
 
-    public Account findByNumber(Number number) {
+    public Account singleByNumber(Number number) {
         return (Account) session().createCriteria(Account.class)
                 .add(Restrictions.eq("number", number))
                 .uniqueResult();

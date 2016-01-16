@@ -5,7 +5,7 @@ import it.softwarelabs.collection.Collection;
 
 public interface AccountRepository {
 
-    Account findByNumber(Number number);
+    Account singleByNumber(Number number);
 
     Collection<Account> findByOwner(User owner);
 

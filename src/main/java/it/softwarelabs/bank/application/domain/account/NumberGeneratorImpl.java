@@ -23,7 +23,7 @@ public class NumberGeneratorImpl implements NumberGenerator {
 
         do {
             number = new Number(randomAlphaNumeric(6));
-            isUnique = null == accountRepository.findByNumber(number);
+            isUnique = null == accountRepository.singleByNumber(number);
         } while (!isUnique);
 
         return number;
