@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="it.softwarelabs.bank.domain.transaction" default-access="field">
+    <class name="Transaction" table="transaction">
+        <composite-id name="id" class="TransactionId">
+            <key-property name="value" column="id"/>
+        </composite-id>
+        <property name="date" insert="false" type="org.joda.time.contrib.hibernate.PersistentDateTime"/>
+        <component name="from" class="it.softwarelabs.bank.domain.account.Number">
+            <property name="number" column="`from`"/>
+        </component>
+        <component name="to" class="it.softwarelabs.bank.domain.account.Number">
+            <property name="number" column="`to`"/>
+        </component>
+        <component name="amount" class="it.softwarelabs.bank.domain.account.Money">
+            <property name="amount" type="java.lang.Double"/>
+        </component>
+    </class>
+</hibernate-mapping>

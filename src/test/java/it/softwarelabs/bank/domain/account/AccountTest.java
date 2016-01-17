@@ -100,9 +100,9 @@ public class AccountTest {
 
         Transaction transaction = account.transferFunds(amount, recipient);
 
-        assertSame(account.getNumber(), transaction.getFrom());
-        assertSame(recipient, transaction.getTo());
-        assertSame(amount, transaction.getAmount());
+        assertSame(account.getNumber(), transaction.from());
+        assertSame(recipient, transaction.to());
+        assertSame(amount, transaction.amount());
     }
 
     @Test(expected = CannotTransferFunds.class)

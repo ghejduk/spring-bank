@@ -2,18 +2,24 @@ package it.softwarelabs.bank.domain.transaction;
 
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.UUID;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertSame;
 
 public class TransactionIdTest {
 
     @Test
-    public void returnsIdPassedInTheConstructor() throws IllegalArgumentException {
-        TransactionId transactionId = new TransactionId(456);
-        assertEquals(456, transactionId.toInt());
+    public void isImmutable() {
+        String id = UUID.randomUUID().toString();
+        TransactionId transactionId = new TransactionId(id);
+        assertSame(id, transactionId.toString());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void throwsExceptionWhenIfPassedIdIsLessThanZero() throws IllegalArgumentException {
-        new TransactionId(0);
+    @Test
+    public void generatesUUIDWhenConstructorIsEmpty() {
+        TransactionId transactionId = new TransactionId();
+
+        assertNotNull(transactionId.toString());
     }
 }

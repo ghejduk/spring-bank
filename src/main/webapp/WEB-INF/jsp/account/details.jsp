@@ -10,7 +10,6 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <h3 class="panel-title">Account <c:out value="${account.number}"/></h3>
-                <a href="<c:url value="/account/create"/>" class="pull-right">Create new account</a>
             </div>
 
             <div class="panel-body">

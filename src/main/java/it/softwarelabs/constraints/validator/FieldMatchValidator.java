@@ -11,11 +11,13 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
     private String field;
     private String matchWith;
     private String message;
+    private boolean inverse;
 
     public void initialize(FieldMatch fieldMatch) {
         field = fieldMatch.field();
         matchWith = fieldMatch.matchWith();
         message = fieldMatch.message();
+        inverse = fieldMatch.inverse();
     }
 
     public boolean isValid(Object object, ConstraintValidatorContext context) {
@@ -29,6 +31,10 @@ public class FieldMatchValidator implements ConstraintValidator<FieldMatch, Obje
             Object matchWitchValue = matchWith.get(object);
 
             boolean result = fieldValue.equals(matchWitchValue);
+
+            if (inverse) {
+                result = !result;
+            }
 
             if (!result) {
                 context.disableDefaultConstraintViolation();

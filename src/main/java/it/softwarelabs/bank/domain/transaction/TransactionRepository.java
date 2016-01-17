@@ -5,7 +5,7 @@ import it.softwarelabs.collection.Collection;
 
 public interface TransactionRepository {
 
-    Transaction findById(TransactionId id);
+    Transaction single(TransactionId id);
 
     Collection<Transaction> findByAccount(Number number);
 

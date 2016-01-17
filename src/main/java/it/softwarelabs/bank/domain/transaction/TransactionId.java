@@ -1,19 +1,22 @@
 package it.softwarelabs.bank.domain.transaction;
 
-public class TransactionId {
+import java.io.Serializable;
+import java.util.UUID;
 
-    private int id;
+public class TransactionId implements Serializable {
 
-    public TransactionId(int id) {
-        if (id < 1) {
-            String message = String.format("Transaction id cannot be less than 1. Given value: %d", id);
-            throw new IllegalArgumentException(message);
-        }
+    private String value;
 
-        this.id = id;
+    public TransactionId() {
+        this.value = UUID.randomUUID().toString();
     }
 
-    public int toInt() {
-        return id;
+    public TransactionId(String value) {
+        this.value = value;
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

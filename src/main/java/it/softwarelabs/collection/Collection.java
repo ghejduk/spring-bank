@@ -4,15 +4,15 @@ import it.softwarelabs.sort.SortDirection;
 
 import java.util.List;
 
-public interface Collection<T> {
+public interface Collection<E> {
 
-    List<T> all();
+    List<E> all();
 
-    Collection<T> slice(int from, int size);
+    Collection<E> slice(int from, int size);
 
-    Collection<T> slice(int size);
+    Collection<E> slice(int size);
 
-    Collection<T> sort(String property, SortDirection direction);
+    Collection<E> sort(String property, SortDirection direction);
 
-    Collection<T> sort(String property);
+    Collection<E> sort(String property);
 }

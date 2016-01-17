@@ -24,6 +24,12 @@ public @interface FieldMatch {
 
     String matchWith();
 
+    /**
+     * If false, fields should match.
+     * If true, they cannot have the same value.
+     */
+    boolean inverse() default false;
+
     @Target({ElementType.TYPE, ElementType.ANNOTATION_TYPE})
     @Retention(RetentionPolicy.RUNTIME)
     public @interface List {

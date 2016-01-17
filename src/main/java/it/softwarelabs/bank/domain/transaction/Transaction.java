@@ -6,11 +6,14 @@ import org.joda.time.DateTime;
 
 public class Transaction {
 
-    //    private TransactionId id;
+    private TransactionId id;
     private DateTime date;
     private Number from;
     private Number to;
     private Money amount;
+
+    protected Transaction() {
+    }
 
     private Transaction(Number from, Number to, Money amount) throws CannotCompleteTransaction {
         if (from.equals(to)) {
@@ -19,6 +22,7 @@ public class Transaction {
             throw new CannotCompleteTransaction(message);
         }
 
+        this.id = new TransactionId();
         this.from = from;
         this.to = to;
         this.amount = amount;
@@ -29,19 +33,23 @@ public class Transaction {
         return new Transaction(from, to, amount);
     }
 
-    public DateTime getDate() {
+    public DateTime date() {
         return date;
     }
 
-    public Number getFrom() {
+    public Number from() {
         return from;
     }
 
-    public Number getTo() {
+    public Number to() {
         return to;
     }
 
-    public Money getAmount() {
+    public Money amount() {
         return amount;
+    }
+
+    public TransactionId id() {
+        return id;
     }
 }

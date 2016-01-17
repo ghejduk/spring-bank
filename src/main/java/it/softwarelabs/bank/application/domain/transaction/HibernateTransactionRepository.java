@@ -5,12 +5,24 @@ import it.softwarelabs.bank.domain.transaction.Transaction;
 import it.softwarelabs.bank.domain.transaction.TransactionId;
 import it.softwarelabs.bank.domain.transaction.TransactionRepository;
 import it.softwarelabs.collection.Collection;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 @Repository
+@Transactional
 public final class HibernateTransactionRepository implements TransactionRepository {
 
-    public Transaction findById(TransactionId id) {
+    private SessionFactory sessionFactory;
+
+    @Autowired
+    public HibernateTransactionRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
+
+    public Transaction single(TransactionId id) {
         return null;
     }
 
@@ -19,6 +31,10 @@ public final class HibernateTransactionRepository implements TransactionReposito
     }
 
     public void add(Transaction transaction) {
+        session().save(transaction);
+    }
 
+    private Session session() {
+        return sessionFactory.getCurrentSession();
     }
 }

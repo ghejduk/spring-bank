@@ -7,7 +7,7 @@ import org.hibernate.criterion.Order;
 
 import java.util.List;
 
-public class HibernateCollection<T> implements Collection<T> {
+public class HibernateCollection<E> implements Collection<E> {
 
     private Session session;
     private Criteria criteria;
@@ -19,7 +19,7 @@ public class HibernateCollection<T> implements Collection<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public List<T> all() {
+    public List<E> all() {
         List list = criteria.list();
         session.clear();
         session.close();
@@ -27,17 +27,17 @@ public class HibernateCollection<T> implements Collection<T> {
     }
 
     @Override
-    public Collection<T> slice(int from, int size) {
+    public Collection<E> slice(int from, int size) {
         return null;
     }
 
     @Override
-    public Collection<T> slice(int size) {
+    public Collection<E> slice(int size) {
         return null;
     }
 
     @Override
-    public Collection<T> sort(String property, SortDirection direction) {
+    public Collection<E> sort(String property, SortDirection direction) {
         if (direction == SortDirection.ASC) {
             criteria.addOrder(Order.asc(property));
         } else {
@@ -48,7 +48,7 @@ public class HibernateCollection<T> implements Collection<T> {
     }
 
     @Override
-    public Collection<T> sort(String property) {
+    public Collection<E> sort(String property) {
         return sort(property, SortDirection.ASC);
     }
 }
