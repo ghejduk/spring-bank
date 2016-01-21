@@ -5,8 +5,14 @@ import it.softwarelabs.bank.domain.transaction.Transaction;
 import it.softwarelabs.bank.domain.transaction.TransactionId;
 import it.softwarelabs.bank.domain.transaction.TransactionRepository;
 import it.softwarelabs.collection.Collection;
+import it.softwarelabs.collection.HibernateCollection;
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,7 +33,13 @@ public final class HibernateTransactionRepository implements TransactionReposito
     }
 
     public Collection<Transaction> findByAccount(Number number) {
-        return null;
+        Session session = sessionFactory.openSession();
+        Criteria criteria = session.createCriteria(Transaction.class);
+        Criterion from = Restrictions.eq("from", number);
+        Criterion to = Restrictions.eq("to", number);
+        criteria.add(Restrictions.or(from, to));
+
+        return new HibernateCollection<>(session, criteria);
     }
 
     public void add(Transaction transaction) {

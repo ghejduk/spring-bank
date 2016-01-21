@@ -9,3 +9,7 @@ form .text-danger {
 h3.panel-title {
     display: inline-block;
 }
+
+.alert h4 {
+    margin: 0;
+}
