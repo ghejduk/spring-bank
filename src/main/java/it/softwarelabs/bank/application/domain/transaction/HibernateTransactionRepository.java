@@ -34,6 +34,10 @@ public final class HibernateTransactionRepository implements TransactionReposito
         session().save(transaction);
     }
 
+    public void update(Transaction transaction) {
+        session().merge(transaction);
+    }
+
     private Session session() {
         return sessionFactory.getCurrentSession();
     }

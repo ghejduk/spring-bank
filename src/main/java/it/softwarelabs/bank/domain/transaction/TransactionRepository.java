@@ -10,4 +10,6 @@ public interface TransactionRepository {
     Collection<Transaction> findByAccount(Number number);
 
     void add(Transaction transaction);
+
+    void update(Transaction transaction);
 }

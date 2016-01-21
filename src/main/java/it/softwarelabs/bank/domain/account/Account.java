@@ -1,6 +1,5 @@
 package it.softwarelabs.bank.domain.account;
 
-import it.softwarelabs.bank.domain.transaction.CannotCompleteTransaction;
 import it.softwarelabs.bank.domain.transaction.Transaction;
 import it.softwarelabs.bank.domain.user.User;
 
@@ -31,23 +30,16 @@ public class Account {
         return balance;
     }
 
-    public Transaction transferFunds(Money amount, Number recipient) throws AccountException {
-        Double currentAmount = balance.toDouble();
-        Double requestedCharge = amount.toDouble();
-        Double newBalance = currentAmount - requestedCharge;
-
-        if (newBalance < 0) {
-            String format = "Account %s has no enough funds (%f) to make the transfer. Requested amount: %f";
-            String message = String.format(format, number.toString(), currentAmount, requestedCharge);
-            throw new NoEnoughFounds(message);
+    public void bookTransaction(Transaction transaction) throws AccountException {
+        if (!transaction.getFrom().equals(number) && !transaction.getTo().equals(number)) {
+            String format = String.format("Account %s is not a part in this transaction %s.", number.toString(), transaction.getId().toString());
+            throw new CannotTransferFunds(format);
         }
 
-        balance = new Balance(newBalance);
-
-        try {
-            return Transaction.create(number, recipient, amount);
-        } catch (CannotCompleteTransaction e) {
-            throw new CannotTransferFunds("Cannot transfer funds due to transaction failure.", e);
+        if (transaction.getFrom().equals(number)) {
+            balance = new Balance(balance.toDouble() - transaction.getAmount().toDouble());
+        } else {
+            balance = new Balance(balance.toDouble() + transaction.getAmount().toDouble());
         }
     }
 

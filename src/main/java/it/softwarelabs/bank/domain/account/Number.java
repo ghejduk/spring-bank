@@ -23,7 +23,7 @@ public class Number implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return obj instanceof Number && number.equals(obj.toString());
+    public boolean equals(Object o) {
+        return o instanceof Number && ((Number) o).number.equals(number);
     }
 }

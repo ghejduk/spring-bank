@@ -8,8 +8,6 @@ import org.junit.Test;
 
 import static junit.framework.TestCase.assertEquals;
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.lessThan;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 
@@ -70,46 +68,29 @@ public class AccountTest {
         assertEquals(account.getBalance().toDouble(), 50.0);
     }
 
-    @Test
-    public void afterTransferMyBalanceIsReduced() throws AccountException {
-        Number recipient = new Number("QWE123");
-        Money amount = new Money(25.0);
-        Double balanceBeforeTransfer = account.getBalance().toDouble();
-
-        account.transferFunds(amount, recipient);
-
-        Double balanceAfterTransfer = account.getBalance().toDouble();
-
-        assertEquals(75.0, balanceAfterTransfer);
-        assertThat(balanceAfterTransfer, is(lessThan(balanceBeforeTransfer)));
-    }
-
-    @Test(expected = NoEnoughFounds.class)
-    public void transferFoundsWillThrowExceptionWhenAccountDoesNotHaveEnoughMoney()
-            throws AccountException {
-        Number recipient = new Number("QWE123");
-        Money amount = new Money(125.0);
-
-        account.transferFunds(amount, recipient);
-    }
-
-    @Test
-    public void transferFundsReturnsTransactionWithProperValues() throws AccountException {
-        Number recipient = new Number("QWE123");
-        Money amount = new Money(50.0);
-
-        Transaction transaction = account.transferFunds(amount, recipient);
-
-        assertSame(account.getNumber(), transaction.from());
-        assertSame(recipient, transaction.to());
-        assertSame(amount, transaction.amount());
-    }
-
     @Test(expected = CannotTransferFunds.class)
-    public void transferFundsThrowsExceptionWhenTryingToMakeTransactionToItSelf() throws AccountException {
-        Number recipient = new Number(account.getNumber().toString());
-        Money amount = new Money(50.0);
+    public void throwsExceptionWhenIsNotPartOfTheTransaction() throws Throwable {
+        Transaction transaction = Transaction.create(new Number("123456"), new Number("789654"), new Money(15.0));
+        account.bookTransaction(transaction);
+    }
 
-        account.transferFunds(amount, recipient);
+    @Test
+    public void reducesBalanceInFromAccount() throws Throwable {
+        Transaction transaction = Transaction.create(account.getNumber(), new Number("789654"), new Money(25.0));
+        Double balanceAfterTransaction = 75.0;
+
+        account.bookTransaction(transaction);
+
+        assertEquals(account.getBalance().toDouble(), balanceAfterTransaction);
+    }
+
+    @Test
+    public void addsBalanceIfToAccount() throws Throwable {
+        Transaction transaction = Transaction.create(new Number("789654"), account.getNumber(), new Money(25.0));
+        Double balanceAfterTransaction = 125.0;
+
+        account.bookTransaction(transaction);
+
+        assertEquals(account.getBalance().toDouble(), balanceAfterTransaction);
     }
 }

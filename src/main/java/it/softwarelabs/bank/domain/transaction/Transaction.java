@@ -11,6 +11,7 @@ public class Transaction {
     private Number from;
     private Number to;
     private Money amount;
+    private TransactionStatus status;
 
     protected Transaction() {
     }
@@ -27,29 +28,43 @@ public class Transaction {
         this.to = to;
         this.amount = amount;
         this.date = DateTime.now();
+        this.status = TransactionStatus.PENDING;
     }
 
     public static Transaction create(Number from, Number to, Money amount) throws CannotCompleteTransaction {
         return new Transaction(from, to, amount);
     }
 
-    public DateTime date() {
+    public void complete() throws TransactionAlreadyCompleted {
+        if (isCompleted()) {
+            String message = String.format("Transaction %s is already completed.", id.toString());
+            throw new TransactionAlreadyCompleted(message);
+        }
+
+        status = TransactionStatus.COMPLETED;
+    }
+
+    public boolean isCompleted() {
+        return status.equals(TransactionStatus.COMPLETED);
+    }
+
+    public DateTime getDate() {
         return date;
     }
 
-    public Number from() {
+    public Number getFrom() {
         return from;
     }
 
-    public Number to() {
+    public Number getTo() {
         return to;
     }
 
-    public Money amount() {
+    public Money getAmount() {
         return amount;
     }
 
-    public TransactionId id() {
+    public TransactionId getId() {
         return id;
     }
 }

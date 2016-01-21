@@ -18,5 +18,11 @@
         <component name="amount" class="it.softwarelabs.bank.domain.account.Money">
             <property name="amount" type="java.lang.Double"/>
         </component>
+        <property name="status" column="status">
+            <type name="org.hibernate.type.EnumType">
+                <param name="enumClass">it.softwarelabs.bank.domain.transaction.TransactionStatus</param>
+                <param name="type">12</param>
+            </type>
+        </property>
     </class>
 </hibernate-mapping>

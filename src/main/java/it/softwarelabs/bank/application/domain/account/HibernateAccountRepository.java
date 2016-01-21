@@ -44,7 +44,7 @@ public final class HibernateAccountRepository implements AccountRepository {
     }
 
     public void update(Account account) {
-        session().save(account);
+        session().merge(account);
     }
 
     private Session session() {
