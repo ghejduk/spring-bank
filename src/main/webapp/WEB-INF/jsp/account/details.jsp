@@ -21,20 +21,20 @@
                 <thead>
                 <tr>
                     <th>ID</th>
+                    <th>Amount</th>
                     <th>Sender</th>
                     <th>Recipient</th>
-                    <th>Amount</th>
-                    <%--<th>Date</th>--%>
+                    <th>Date</th>
                 </tr>
                 </thead>
                 <tbody>
                 <c:forEach var="transaction" items="${transactions}">
                     <tr>
                         <td>${transaction.id}</td>
+                        <td>${transaction.amount.toDouble()}</td>
                         <td>${transaction.from}</td>
                         <td>${transaction.to}</td>
-                        <td>${transaction.amount.toDouble()}</td>
-                        <%--<td>${transaction.date}</td>--%>
+                        <td>${transaction.date}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

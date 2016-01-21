@@ -38,6 +38,7 @@ public final class HibernateTransactionRepository implements TransactionReposito
         Criterion from = Restrictions.eq("from", number);
         Criterion to = Restrictions.eq("to", number);
         criteria.add(Restrictions.or(from, to));
+        criteria.addOrder(Order.desc("date"));
 
         return new HibernateCollection<>(session, criteria);
     }

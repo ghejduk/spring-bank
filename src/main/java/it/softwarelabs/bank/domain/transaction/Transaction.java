@@ -2,12 +2,14 @@ package it.softwarelabs.bank.domain.transaction;
 
 import it.softwarelabs.bank.domain.account.Money;
 import it.softwarelabs.bank.domain.account.Number;
-import org.joda.time.DateTime;
+
+import java.sql.Timestamp;
+
 
 public class Transaction {
 
     private TransactionId id;
-    private DateTime date;
+    private Timestamp date;
     private Number from;
     private Number to;
     private Money amount;
@@ -27,7 +29,6 @@ public class Transaction {
         this.from = from;
         this.to = to;
         this.amount = amount;
-        this.date = DateTime.now();
         this.status = TransactionStatus.PENDING;
     }
 
@@ -48,7 +49,7 @@ public class Transaction {
         return status.equals(TransactionStatus.COMPLETED);
     }
 
-    public DateTime getDate() {
+    public Timestamp getDate() {
         return date;
     }
 
