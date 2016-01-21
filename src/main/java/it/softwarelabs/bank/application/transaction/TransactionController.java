@@ -36,7 +36,7 @@ public class TransactionController {
     @RequestMapping(value = "/transaction", method = RequestMethod.POST)
     public String save(@Valid TransactionForm transactionForm, BindingResult bindingResult, Model model,
                        User user, RedirectAttributes redirectAttributes)
-            throws AccountException, CannotCompleteTransaction, TransactionAlreadyCompleted {
+            throws BookingFailed, CannotCompleteTransaction {
         if (bindingResult.hasErrors()) {
             model.addAttribute("transactionForm", transactionForm);
             model.addAttribute("accounts", accountRepository.findByOwner(user).all());

@@ -16,13 +16,17 @@ public class BookTransaction {
         this.transactionRepository = transactionRepository;
     }
 
-    public void book(Transaction transaction) throws AccountException, TransactionAlreadyCompleted {
+    public void book(Transaction transaction) throws BookingFailed {
         Account sender = accountRepository.singleByNumber(transaction.getFrom());
         Account recipient = accountRepository.singleByNumber(transaction.getTo());
 
-        sender.bookTransaction(transaction);
-        recipient.bookTransaction(transaction);
-        transaction.complete();
+        try {
+            sender.bookTransaction(transaction);
+            recipient.bookTransaction(transaction);
+            transaction.complete();
+        } catch (AccountException | TransactionAlreadyCompleted e) {
+            throw new BookingFailed(String.format("Could not book transaction %s", transaction.getId()), e);
+        }
 
         accountRepository.update(sender);
         accountRepository.update(recipient);
