@@ -38,4 +38,10 @@
         <constructor-arg ref="hibernateAccountRepository"/>
         <constructor-arg ref="hibernateTransactionRepository"/>
     </bean>
+
+    <bean id="registerUser" class="it.softwarelabs.bank.domain.user.RegisterUser">
+        <constructor-arg ref="BCryptEncoder"/>
+        <constructor-arg ref="userFactory"/>
+        <constructor-arg ref="hibernateUserRepository"/>
+    </bean>
 </beans>

@@ -10,7 +10,6 @@ public class RegisterUser {
     private UserFactory userFactory;
     private UserRepository userRepository;
 
-    @Autowired
     public RegisterUser(PasswordEncoder passwordEncoder, UserFactory userFactory, UserRepository userRepository) {
         this.passwordEncoder = passwordEncoder;
         this.userFactory = userFactory;
