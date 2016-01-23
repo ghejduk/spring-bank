@@ -15,8 +15,12 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public final class HibernateUserRepository implements UserRepository {
 
-    @Autowired
     private SessionFactory sessionFactory;
+
+    @Autowired
+    public HibernateUserRepository(SessionFactory sessionFactory) {
+        this.sessionFactory = sessionFactory;
+    }
 
     public User findById(UserId id) {
         return session().get(User.class, id);
