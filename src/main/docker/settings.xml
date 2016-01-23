@@ -4,7 +4,7 @@
         <server>
             <id>TomcatServer</id>
             <username>admin</username>
-            <passwordHash>123</passwordHash>
+            <passwordHash>changeToSomethingSecret</passwordHash>
         </server>
     </servers>
 </settings>

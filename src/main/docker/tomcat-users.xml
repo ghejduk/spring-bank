@@ -3,5 +3,5 @@
     <role rolename="manager-gui"/>
     <role rolename="manager-gui"/>
     <role rolename="manager-script"/>
-    <user username="docker" passwordHash="123" roles="manager,manager-gui,manager-script"/>
+    <user username="docker" passwordHash="changeToSomethingSecret" roles="manager,manager-gui,manager-script"/>
 </tomcat-users>
