@@ -53,7 +53,7 @@
                     ${footer_content}
                 </c:when>
                 <c:otherwise>
-                    default footer :)
+                    <span class="pull-right">Some message</span>
                 </c:otherwise>
             </c:choose>
         </p>

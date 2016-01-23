@@ -19,6 +19,8 @@
         </security:authentication-provider>
     </security:authentication-manager>
 
+    <security:http pattern="/favicon.ico" security="none"/>
+
     <security:http use-expressions="true">
         <security:intercept-url pattern="/static/**" access="permitAll"/>
         <security:intercept-url pattern="/webjars/**" access="permitAll"/>
