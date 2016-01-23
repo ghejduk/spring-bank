@@ -46,11 +46,12 @@ public class CheckBalanceValidator implements ConstraintValidator<CheckBalance, 
             }
 
             Account account = accountRepository.singleByNumber(new Number(accountNumber));
-            boolean result = account.getBalance().toDouble() >= Double.valueOf(requestedAmount.toString());
+            Double accountBalance = account.getBalance().toDouble();
+            boolean result = accountBalance >= Double.valueOf(requestedAmount.toString());
 
             if (!result) {
                 context.disableDefaultConstraintViolation();
-                context.buildConstraintViolationWithTemplate(message)
+                context.buildConstraintViolationWithTemplate(message.replace("{balance}", accountBalance.toString()))
                         .addPropertyNode(amountField)
                         .addConstraintViolation();
             }

@@ -12,7 +12,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = CheckBalanceValidator.class)
 public @interface CheckBalance {
 
-    String message() default "You do not have enough funds to complete this transaction.";
+    String message() default "You cannot transfer more than {balance}.";
 
     Class<?>[] groups() default {};
 
