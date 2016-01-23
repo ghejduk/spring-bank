@@ -67,9 +67,9 @@ public class AppConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMappingResources(
-                "/hibernate/mapping/User.hbm.xml",
-                "/hibernate/mapping/Transaction.hbm.xml",
-                "/hibernate/mapping/Account.hbm.xml"
+                "/hibernate/User.hbm.xml",
+                "/hibernate/Transaction.hbm.xml",
+                "/hibernate/Account.hbm.xml"
         );
         sessionFactory.setHibernateProperties(getHibernateProperties());
         sessionFactory.afterPropertiesSet();
