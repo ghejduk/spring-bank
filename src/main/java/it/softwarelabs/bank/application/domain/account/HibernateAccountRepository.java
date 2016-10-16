@@ -3,6 +3,7 @@ package it.softwarelabs.bank.application.domain.account;
 import it.softwarelabs.bank.domain.account.Account;
 import it.softwarelabs.bank.domain.account.AccountRepository;
 import it.softwarelabs.bank.domain.account.Number;
+import it.softwarelabs.bank.domain.eventstore.Aggregate;
 import it.softwarelabs.bank.domain.user.User;
 import it.softwarelabs.collection.Collection;
 import it.softwarelabs.collection.HibernateCollection;
@@ -32,18 +33,18 @@ public final class HibernateAccountRepository implements AccountRepository {
     }
 
     @SuppressWarnings("unchecked")
-    public Collection<Account> findByOwner(User owner) {
+    public Collection<Aggregate> findByOwner(User owner) {
         Session session = sessionFactory.openSession();
         Criteria criteria = session.createCriteria(Account.class);
         criteria.add(Restrictions.eq("owner", owner));
         return new HibernateCollection<>(session, criteria);
     }
 
-    public void add(Account account) {
+    public void add(Aggregate account) {
         session().save(account);
     }
 
-    public void update(Account account) {
+    public void update(Aggregate account) {
         session().merge(account);
     }
 

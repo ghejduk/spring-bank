@@ -1,9 +1,8 @@
 package it.softwarelabs.bank.application.domain.account;
 
-import it.softwarelabs.bank.domain.account.Account;
-import it.softwarelabs.bank.domain.account.AccountRepository;
-import it.softwarelabs.bank.domain.account.Money;
+import it.softwarelabs.bank.domain.account.*;
 import it.softwarelabs.bank.domain.account.Number;
+import it.softwarelabs.bank.domain.eventstore.Aggregate;
 import it.softwarelabs.bank.domain.user.Email;
 import it.softwarelabs.bank.domain.user.User;
 import it.softwarelabs.bank.domain.user.UserRepository;
@@ -26,10 +25,10 @@ public class CreateAccount {
         this.userRepository = userRepository;
     }
 
-    public Account open(String email, int balance) {
+    public Aggregate open(String email, int balance) {
         Number number = numberGenerator.next();
         User user = userRepository.findByEmail(new Email(email));
-        Account account = Account.open(number, user, new Money((double) balance));
+        Aggregate account = Account.open(new AccountId(), number, user, new Money((double) balance));
         accountRepository.add(account);
         return account;
     }

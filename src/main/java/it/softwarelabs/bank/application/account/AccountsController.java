@@ -1,7 +1,7 @@
 package it.softwarelabs.bank.application.account;
 
-import it.softwarelabs.bank.domain.account.Account;
 import it.softwarelabs.bank.domain.account.AccountRepository;
+import it.softwarelabs.bank.domain.eventstore.Aggregate;
 import it.softwarelabs.bank.domain.user.User;
 import it.softwarelabs.collection.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +22,7 @@ public class AccountsController {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String list(Model model, User user) {
-        Collection<Account> collection = accountRepository.findByOwner(user);
+        Collection<Aggregate> collection = accountRepository.findByOwner(user);
         model.addAttribute("accounts", collection.all());
         return "account/list";
     }

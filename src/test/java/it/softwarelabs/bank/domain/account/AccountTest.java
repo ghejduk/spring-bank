@@ -1,81 +1,82 @@
 package it.softwarelabs.bank.domain.account;
 
+import it.softwarelabs.bank.domain.account.event.AccountWasOpened;
+import it.softwarelabs.bank.domain.eventstore.Event;
+import it.softwarelabs.bank.domain.eventstore.EventStream;
 import it.softwarelabs.bank.domain.transaction.Transaction;
+import it.softwarelabs.bank.domain.user.Email;
 import it.softwarelabs.bank.domain.user.User;
-import it.softwarelabs.bank.domain.user.UserFactory;
-import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static junit.framework.TestCase.assertEquals;
-import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertSame;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertThat;
 
 public class AccountTest {
 
-    private Account account;
+    @Test
+    public void clearsEventListAfterTheyWasRead() throws Exception {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(5.50);
+        final Account account = Account.open(id, number, owner, deposit);
 
-    @Before
-    public void createAccount() {
-        Number number = new Number("ADS123");
-        UserFactory userFactory = new UserFactory();
-        User owner = userFactory.create("John", "Doe", "john@doe.com");
-        Money deposit = new Money(100.0);
+        account.producedEvents();
 
-        account = Account.open(number, owner, deposit);
+        assertThat(account.producedEvents(), equalTo(new ArrayList<>()));
     }
 
     @Test
-    public void openAccountMethodWillReturnNewInstance() {
-        Number number = new Number("ADS123");
-        UserFactory userFactory = new UserFactory();
-        User owner = userFactory.create("John", "Doe", "john@doe.com");
-        Money deposit = new Money(100.0);
+    public void producesEventAboutOpenedAccount() throws Exception {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(5.50);
+        final Account account = Account.open(id, number, owner, deposit);
 
-        assertThat(Account.open(number, owner, deposit), instanceOf(Account.class));
+        assertThat(account.producedEvents(), hasItem(new AccountWasOpened(id, number, owner, deposit)));
     }
 
     @Test
-    public void getNumberWillReturnNumberPassedInConstructor() {
-        Number number = new Number("ADS123");
-        UserFactory userFactory = new UserFactory();
-        User owner = userFactory.create("John", "Doe", "john@doe.com");
-        Money deposit = new Money(100.0);
-        Account account = Account.open(number, owner, deposit);
+    public void createsAccountFromEventStream() throws Exception {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(5.50);
 
-        assertSame(number, account.getNumber());
-    }
+        final List<Event> events = new ArrayList<>();
+        events.add(new AccountWasOpened(id, number, owner, deposit));
 
-    @Test
-    public void getOwnerWillReturnUserPassedInConstructor() {
-        Number number = new Number("ADS123");
-        UserFactory userFactory = new UserFactory();
-        User owner = userFactory.create("John", "Doe", "john@doe.com");
-        Money deposit = new Money(100.0);
-        Account account = Account.open(number, owner, deposit);
+        final Account account = new Account(new EventStream(events, 1));
 
-        assertSame(owner, account.getOwner());
-    }
 
-    @Test
-    public void newAccountHasBalanceEqualedToTheDeposit() {
-        Number number = new Number("ADS123");
-        UserFactory userFactory = new UserFactory();
-        User owner = userFactory.create("John", "Doe", "john@doe.com");
-        Money deposit = new Money(50.0);
-        Account account = Account.open(number, owner, deposit);
-
-        assertEquals(account.getBalance().toDouble(), 50.0);
     }
 
     @Test(expected = CannotTransferFunds.class)
     public void throwsExceptionWhenIsNotPartOfTheTransaction() throws Throwable {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(5.50);
+        final Account account = Account.open(id, number, owner, deposit);
+
         Transaction transaction = Transaction.create(new Number("123456"), new Number("789654"), new Money(15.0));
         account.bookTransaction(transaction);
     }
 
     @Test
     public void reducesBalanceInFromAccount() throws Throwable {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(100.0);
+        final Account account = Account.open(id, number, owner, deposit);
+
         Transaction transaction = Transaction.create(account.getNumber(), new Number("789654"), new Money(25.0));
         Double balanceAfterTransaction = 75.0;
 
@@ -86,6 +87,12 @@ public class AccountTest {
 
     @Test
     public void addsBalanceIfToAccount() throws Throwable {
+        final AccountId id = new AccountId();
+        final Number number = new Number("789ASD");
+        final User owner = User.register(new Email("test@example.com"));
+        final Money deposit = new Money(100.0);
+        final Account account = Account.open(id, number, owner, deposit);
+
         Transaction transaction = Transaction.create(new Number("789654"), account.getNumber(), new Money(25.0));
         Double balanceAfterTransaction = 125.0;
 

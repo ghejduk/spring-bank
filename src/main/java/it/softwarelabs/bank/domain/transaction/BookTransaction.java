@@ -6,7 +6,7 @@ import it.softwarelabs.bank.domain.account.AccountRepository;
 import it.softwarelabs.bank.domain.stereotype.Service;
 
 @Service
-public class BookTransaction {
+public final class BookTransaction {
 
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
@@ -25,7 +25,7 @@ public class BookTransaction {
             recipient.bookTransaction(transaction);
             transaction.complete();
         } catch (AccountException | TransactionAlreadyCompleted e) {
-            throw new BookingFailed(String.format("Could not book transaction %s", transaction.getId()), e);
+            throw new BookingFailed("Could not book transaction " + transaction.getId(), e);
         }
 
         accountRepository.update(sender);

@@ -1,17 +1,17 @@
-package it.softwarelabs.bank.domain.transaction;
+package it.softwarelabs.bank.domain.eventstore;
 
 import java.io.Serializable;
 import java.util.UUID;
 
-public final class TransactionId implements Serializable {
+public abstract class AggregateId implements Serializable {
 
-    private String value;
+    protected String value;
 
-    public TransactionId() {
+    public AggregateId() {
         this.value = UUID.randomUUID().toString();
     }
 
-    public TransactionId(String value) {
+    public AggregateId(String value) {
         this.value = value;
     }
 

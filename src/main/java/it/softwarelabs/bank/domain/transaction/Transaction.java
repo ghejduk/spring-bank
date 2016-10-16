@@ -6,7 +6,7 @@ import it.softwarelabs.bank.domain.account.Number;
 import java.sql.Timestamp;
 
 
-public class Transaction {
+public final class Transaction {
 
     private TransactionId id;
     private Timestamp date;

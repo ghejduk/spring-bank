@@ -1,6 +1,6 @@
 package it.softwarelabs.bank.domain.account;
 
-public class Money {
+public final class Money {
 
     private Double amount;
 

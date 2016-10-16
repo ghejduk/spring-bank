@@ -2,7 +2,7 @@ package it.softwarelabs.bank.domain.account;
 
 import java.io.Serializable;
 
-public class Number implements Serializable {
+public final class Number implements Serializable {
 
     private String number;
 

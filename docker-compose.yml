@@ -1,0 +1,20 @@
+version: "2"
+
+services:
+  tomcat:
+    image: softwarelabsit/softwarelabsit-bank
+    depends_on:
+      - "mysql"
+    ports:
+      - "4801:8080"
+    volumes:
+      - "./docker/log:/var/log/tomcat"
+
+  mysql:
+    image: mysql
+    volumes:
+      - "./docker/mysql:/var/lib/mysql"
+    ports: ["4802:3306"]
+    environment:
+      MYSQL_ROOT_PASSWORD: 123
+      MYSQL_DATABASE: bank
