@@ -1,5 +1,6 @@
 package it.softwarelabs.bank.application.domain.account;
 
+import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.user.UserId;
 
 import java.util.ArrayList;
@@ -23,5 +24,13 @@ public final class InMemoryAccountViewRepository implements AccountViewRepositor
     @Override
     public List<AccountView> findForOwner(UserId id) {
         return accountViews;
+    }
+
+    @Override
+    public AccountView forNumber(Number number) {
+        return accountViews.stream()
+            .filter(accountView -> accountView.getNumber().equals(number.toString()))
+            .findFirst()
+            .get();
     }
 }

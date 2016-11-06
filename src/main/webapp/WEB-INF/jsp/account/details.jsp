@@ -14,7 +14,7 @@
 
             <div class="panel-body">
                 <div class="alert alert-info" role="alert">
-                    <h4>Current balance: ${account.balance.toDouble()}</h4>
+                    <h4>Current balance: ${account.balance}</h4>
                 </div>
 
                 <table class="table table-striped">

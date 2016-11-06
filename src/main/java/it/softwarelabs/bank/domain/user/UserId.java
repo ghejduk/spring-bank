@@ -15,6 +15,10 @@ public class UserId implements Serializable {
         this.id = UUID.fromString(id);
     }
 
+    public UserId(UUID id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
         return id.toString();

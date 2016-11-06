@@ -1,5 +1,6 @@
 package it.softwarelabs.bank.application.domain.account;
 
+import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.user.UserId;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -14,4 +15,6 @@ public interface AccountViewRepository {
     List<AccountView> all();
 
     List<AccountView> findForOwner(UserId id);
+
+    AccountView forNumber(Number number);
 }

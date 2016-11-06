@@ -1,5 +1,6 @@
 package it.softwarelabs.bank.application.domain.account;
 
+import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.user.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -52,6 +53,20 @@ public final class JdbcAccountViewRepository implements AccountViewRepository {
         return jdbcTemplate.query(
             "SELECT * FROM account WHERE owner_id = :ownerId",
             new MapSqlParameterSource("ownerId", id.value()),
+            (rs, rowNum) -> new AccountView(
+                UUID.fromString(rs.getString("id")),
+                rs.getString("number"),
+                rs.getDouble("balance"),
+                UUID.fromString(rs.getString("owner_id"))
+            )
+        );
+    }
+
+    @Override
+    public AccountView forNumber(Number number) {
+        return jdbcTemplate.queryForObject(
+            "SELECT * FROM account WHERE number = :number",
+            new MapSqlParameterSource("number", number.toString()),
             (rs, rowNum) -> new AccountView(
                 UUID.fromString(rs.getString("id")),
                 rs.getString("number"),
