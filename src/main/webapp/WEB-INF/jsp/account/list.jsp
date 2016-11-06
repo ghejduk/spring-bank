@@ -27,7 +27,7 @@
                             <td>
                                 <a href="<c:url value="/account/${account.number}"/>">${account.number}</a>
                             </td>
-                            <td>${account.balance.toDouble()}</td>
+                            <td>${account.balance}</td>
                         </tr>
                     </c:forEach>
                     </tbody>

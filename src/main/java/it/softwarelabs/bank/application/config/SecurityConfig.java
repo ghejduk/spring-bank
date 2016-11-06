@@ -3,6 +3,7 @@ package it.softwarelabs.bank.application.config;
 import it.softwarelabs.bank.application.domain.account.NumberPermissionEvaluator;
 import it.softwarelabs.bank.application.domain.user.BCryptEncoder;
 import it.softwarelabs.bank.domain.account.AccountRepository;
+import it.softwarelabs.bank.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -44,8 +45,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public NumberPermissionEvaluator numberPermissionEvaluator(AccountRepository accountRepository) {
-        return new NumberPermissionEvaluator(accountRepository);
+    public NumberPermissionEvaluator numberPermissionEvaluator(AccountRepository accountRepository, UserRepository userRepository) {
+        return new NumberPermissionEvaluator(accountRepository, userRepository);
     }
 
     @Bean

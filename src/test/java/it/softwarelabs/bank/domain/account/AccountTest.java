@@ -39,7 +39,7 @@ public class AccountTest {
         final Money deposit = new Money(5.50);
         final Account account = Account.open(id, number, owner, deposit);
 
-        assertThat(account.producedEvents(), hasItem(new AccountWasOpened(id, number, owner, deposit)));
+        assertThat(account.producedEvents(), hasItem(new AccountWasOpened(id, number, owner.id(), deposit)));
     }
 
     @Test
@@ -50,11 +50,9 @@ public class AccountTest {
         final Money deposit = new Money(5.50);
 
         final List<Event> events = new ArrayList<>();
-        events.add(new AccountWasOpened(id, number, owner, deposit));
+        events.add(new AccountWasOpened(id, number, owner.id(), deposit));
 
         final Account account = new Account(new EventStream(events, 1));
-
-
     }
 
     @Test(expected = CannotTransferFunds.class)

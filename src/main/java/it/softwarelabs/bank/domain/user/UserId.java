@@ -5,18 +5,22 @@ import java.util.UUID;
 
 public class UserId implements Serializable {
 
-    private String id;
+    private UUID id;
 
     public UserId() {
-        this.id = UUID.randomUUID().toString();
+        this.id = UUID.randomUUID();
     }
 
     public UserId(String id) {
-        this.id = id;
+        this.id = UUID.fromString(id);
     }
 
     @Override
     public String toString() {
+        return id.toString();
+    }
+
+    public UUID value() {
         return id;
     }
 }

@@ -5,6 +5,7 @@ import it.softwarelabs.bank.domain.account.Money;
 import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.eventstore.Event;
 import it.softwarelabs.bank.domain.user.User;
+import it.softwarelabs.bank.domain.user.UserId;
 
 import java.util.Objects;
 
@@ -12,10 +13,10 @@ public final class AccountWasOpened extends Event {
 
     private final AccountId accountId;
     private final Number number;
-    private final User owner;
+    private final UserId owner;
     private final Money deposit;
 
-    public AccountWasOpened(AccountId accountId, Number number, User owner, Money deposit) {
+    public AccountWasOpened(AccountId accountId, Number number, UserId owner, Money deposit) {
         this.accountId = accountId;
         this.number = number;
         this.owner = owner;
@@ -30,7 +31,7 @@ public final class AccountWasOpened extends Event {
         return number;
     }
 
-    public User owner() {
+    public UserId owner() {
         return owner;
     }
 

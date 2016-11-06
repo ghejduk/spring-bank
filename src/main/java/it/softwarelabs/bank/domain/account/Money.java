@@ -1,6 +1,8 @@
 package it.softwarelabs.bank.domain.account;
 
-public final class Money {
+import java.io.Serializable;
+
+public final class Money implements Serializable {
 
     private Double amount;
 

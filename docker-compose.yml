@@ -3,18 +3,15 @@ version: "2"
 services:
   tomcat:
     image: softwarelabsit/softwarelabsit-bank
-    depends_on:
-      - "mysql"
-    ports:
-      - "4801:8080"
-    volumes:
-      - "./docker/log:/var/log/tomcat"
+    depends_on: ["bankdb"]
+    ports: ["4801:8080", "4809:8000"]
+    volumes: ["./docker/log:/var/log/tomcat"]
 
-  mysql:
-    image: mysql
-    volumes:
-      - "./docker/mysql:/var/lib/mysql"
-    ports: ["4802:3306"]
+  bankdb:
+    image: postgres:9.6
+    volumes: ["./docker/trackingdb:/var/lib/postgresql/data"]
+    ports: ["4802:5432"]
     environment:
-      MYSQL_ROOT_PASSWORD: 123
-      MYSQL_DATABASE: bank
+      POSTGRES_PASSWORD: 123
+      POSTGRES_USER: admin
+      POSTGRES_DB: bank

@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-docker-compose -f ./docker/mysql.yml --x-networking up -d
 mvn clean package docker:build -Dmaven.test.skip=true
-docker-compose -f tomcat.yml kill
-docker-compose -f tomcat.yml rm -f
-docker-compose -f tomcat.yml --x-networking up -d
+docker-compose kill
+docker-compose rm -fv
+docker-compose up -d

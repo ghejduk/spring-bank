@@ -9,6 +9,7 @@ import it.softwarelabs.bank.domain.eventstore.Event;
 import it.softwarelabs.bank.domain.eventstore.EventStream;
 import it.softwarelabs.bank.domain.transaction.Transaction;
 import it.softwarelabs.bank.domain.user.User;
+import it.softwarelabs.bank.domain.user.UserId;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -21,7 +22,7 @@ public final class Account implements Aggregate {
 
     private AccountId id;
     private Number number;
-    private User owner;
+    private UserId ownerId;
     private Balance balance;
     private long version;
     private List<Event> producedEvents = new ArrayList<>();
@@ -37,7 +38,7 @@ public final class Account implements Aggregate {
     }
 
     private Account(AccountId id, Number number, User owner, Money deposit) {
-        final AccountWasOpened accountWasOpened = new AccountWasOpened(id, number, owner, deposit);
+        final AccountWasOpened accountWasOpened = new AccountWasOpened(id, number, owner.id(), deposit);
         applyEvent(accountWasOpened);
         this.producedEvents.add(accountWasOpened);
     }
@@ -61,7 +62,7 @@ public final class Account implements Aggregate {
     private void apply(AccountWasOpened accountWasOpened) {
         id = accountWasOpened.accountId();
         number = accountWasOpened.number();
-        owner = accountWasOpened.owner();
+        ownerId = accountWasOpened.owner();
         balance = new Balance(accountWasOpened.deposit().toDouble());
     }
 
@@ -72,10 +73,10 @@ public final class Account implements Aggregate {
         }
 
         final FundsWereTransferred fundsWereTransferred = new FundsWereTransferred(
-                id,
-                transaction.getFrom(),
-                transaction.getTo(),
-                transaction.getAmount()
+            id,
+            transaction.getFrom(),
+            transaction.getTo(),
+            transaction.getAmount()
         );
         apply(fundsWereTransferred);
         producedEvents.add(fundsWereTransferred);
@@ -129,8 +130,8 @@ public final class Account implements Aggregate {
         return balance;
     }
 
-    public User getOwner() {
-        return owner;
+    public UserId getOwnerId() {
+        return ownerId;
     }
 
     public AccountId id() {
@@ -141,8 +142,8 @@ public final class Account implements Aggregate {
         return number;
     }
 
-    public User owner() {
-        return owner;
+    public UserId owner() {
+        return ownerId;
     }
 
     public Balance balance() {

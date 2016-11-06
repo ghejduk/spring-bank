@@ -28,9 +28,12 @@ public class UserResolver implements HandlerMethodArgumentResolver {
     }
 
     @Override
-    public Object resolveArgument(MethodParameter methodParameter, ModelAndViewContainer modelAndViewContainer,
-                                  NativeWebRequest nativeWebRequest, WebDataBinderFactory webDataBinderFactory)
-            throws Exception {
+    public Object resolveArgument(
+        MethodParameter methodParameter,
+        ModelAndViewContainer modelAndViewContainer,
+        NativeWebRequest nativeWebRequest,
+        WebDataBinderFactory webDataBinderFactory
+    ) throws Exception {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(new Email(email));
     }

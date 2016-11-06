@@ -1,6 +1,11 @@
 package it.softwarelabs.bank.application.config;
 
+import it.softwarelabs.bank.application.domain.account.AccountPrediction;
+import it.softwarelabs.bank.application.domain.account.AccountViewRepository;
 import it.softwarelabs.bank.domain.account.AccountRepository;
+import it.softwarelabs.bank.domain.eventbus.EventBus;
+import it.softwarelabs.bank.domain.eventbus.EventSubscriber;
+import it.softwarelabs.bank.domain.eventbus.SimpleEventBus;
 import it.softwarelabs.bank.domain.stereotype.Factory;
 import it.softwarelabs.bank.domain.stereotype.Service;
 import it.softwarelabs.bank.domain.transaction.BookTransaction;
@@ -21,17 +26,17 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 import java.io.IOException;
-import java.util.Properties;
+import java.util.List;
 
 @Configuration
 @EnableTransactionManagement
 @PropertySource("classpath:/db/jdbc.properties")
 @Import({WebConfig.class, SecurityConfig.class})
 @ComponentScan(
-        basePackages = {"it.softwarelabs.bank.application", "it.softwarelabs.bank.domain"},
-        includeFilters = {
-                @ComponentScan.Filter(value = {Service.class, Factory.class}, type = FilterType.ANNOTATION)
-        }
+    basePackages = {"it.softwarelabs.bank.application", "it.softwarelabs.bank.domain"},
+    includeFilters = {
+        @ComponentScan.Filter(value = {Service.class, Factory.class}, type = FilterType.ANNOTATION)
+    }
 )
 public class AppConfig {
 
@@ -67,20 +72,11 @@ public class AppConfig {
         LocalSessionFactoryBean sessionFactory = new LocalSessionFactoryBean();
         sessionFactory.setDataSource(dataSource);
         sessionFactory.setMappingResources(
-                "/hibernate/User.hbm.xml",
-                "/hibernate/Transaction.hbm.xml",
-                "/hibernate/Account.hbm.xml"
+            "/hibernate/User.hbm.xml",
+            "/hibernate/Transaction.hbm.xml"
         );
-        sessionFactory.setHibernateProperties(getHibernateProperties());
         sessionFactory.afterPropertiesSet();
         return sessionFactory.getObject();
-    }
-
-    private Properties getHibernateProperties() {
-        Properties properties = new Properties();
-        properties.put("hibernate.show_sql", "true");
-        properties.put("hibernate.dialect", "org.hibernate.dialect.MySQLDialect");
-        return properties;
     }
 
     @Bean
@@ -95,8 +91,21 @@ public class AppConfig {
     }
 
     @Bean
-    public RegisterUser registerUser(PasswordEncoder passwordEncoder, UserFactory userFactory,
-                                     UserRepository userRepository) {
+    public RegisterUser registerUser(
+        PasswordEncoder passwordEncoder,
+        UserFactory userFactory,
+        UserRepository userRepository
+    ) {
         return new RegisterUser(passwordEncoder, userFactory, userRepository);
+    }
+
+    @Bean
+    public AccountPrediction accountPrediction(AccountViewRepository accountViewRepository) {
+        return new AccountPrediction(accountViewRepository);
+    }
+
+    @Bean
+    public EventBus eventBus(List<EventSubscriber> eventSubscribers) {
+        return new SimpleEventBus(eventSubscribers);
     }
 }
