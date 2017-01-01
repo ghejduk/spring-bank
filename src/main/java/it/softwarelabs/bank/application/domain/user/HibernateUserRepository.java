@@ -28,9 +28,9 @@ public final class HibernateUserRepository implements UserRepository {
 
     public User findByEmail(Email email) {
         return (User) session()
-                .createCriteria(User.class)
-                .add(Restrictions.eq("email", email))
-                .uniqueResult();
+            .createCriteria(User.class)
+            .add(Restrictions.eq("email", email))
+            .uniqueResult();
     }
 
     public void add(User user) {

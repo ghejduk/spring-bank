@@ -39,14 +39,17 @@ public final class SimpleEventBus implements EventBus {
     public void publish(Event event) {
         final Class<? extends Event> eventClass = event.getClass();
 
-        for (EventSubscriber eventSubscriber : eventSubscribers.get(eventClass)) {
-            try {
-                final Method method = eventSubscriber.getClass().getDeclaredMethod(METHOD, eventClass);
-                method.invoke(eventSubscriber, event);
-            } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
-                throw new RuntimeException("Could not handle event " + eventClass.toString(), e);
+        if (eventSubscribers.containsKey(eventClass)) {
+            for (EventSubscriber eventSubscriber : eventSubscribers.get(eventClass)) {
+                try {
+                    final Method method = eventSubscriber.getClass().getDeclaredMethod(METHOD, eventClass);
+                    method.invoke(eventSubscriber, event);
+                } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
+                    throw new RuntimeException("Could not handle event " + eventClass.toString(), e);
+                }
             }
         }
+
     }
 
     @Override

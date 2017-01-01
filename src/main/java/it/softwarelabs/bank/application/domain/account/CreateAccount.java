@@ -5,6 +5,7 @@ import it.softwarelabs.bank.domain.account.AccountId;
 import it.softwarelabs.bank.domain.account.Money;
 import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.eventstore.EventStore;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
 import it.softwarelabs.bank.domain.user.Email;
 import it.softwarelabs.bank.domain.user.User;
 import it.softwarelabs.bank.domain.user.UserRepository;
@@ -33,6 +34,10 @@ public class CreateAccount {
         Number number = numberGenerator.next();
         User user = userRepository.findByEmail(new Email(email));
         Account account = Account.open(new AccountId(), number, user, new Money((double) balance));
-        eventStore.appendToEventStream(account.id(), 0, account.producedEvents());
+        try {
+            eventStore.appendToEventStream(account);
+        } catch (EventStoreException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

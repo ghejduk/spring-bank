@@ -1,9 +1,8 @@
 package it.softwarelabs.bank.application.config;
 
+import it.softwarelabs.bank.application.domain.account.AccountIdPermissionEvaluator;
 import it.softwarelabs.bank.application.domain.account.AccountViewRepository;
-import it.softwarelabs.bank.application.domain.account.NumberPermissionEvaluator;
 import it.softwarelabs.bank.application.domain.user.BCryptEncoder;
-import it.softwarelabs.bank.domain.account.AccountRepository;
 import it.softwarelabs.bank.domain.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -38,23 +37,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
-                .antMatchers("/static/**", "/webjars/**", "/login", "/register").permitAll()
-                .antMatchers("/**").authenticated();
+            .antMatchers("/static/**", "/webjars/**", "/login", "/register").permitAll()
+            .antMatchers("/**").authenticated();
 
         http.formLogin().loginPage("/login").defaultSuccessUrl("/");
         http.logout().logoutUrl("/logout").logoutSuccessUrl("/").invalidateHttpSession(true);
     }
 
     @Bean
-    public NumberPermissionEvaluator numberPermissionEvaluator(
+    public AccountIdPermissionEvaluator accountIdPermissionEvaluator(
         AccountViewRepository accountViewRepository,
         UserRepository userRepository
     ) {
-        return new NumberPermissionEvaluator(accountViewRepository, userRepository);
+        return new AccountIdPermissionEvaluator(accountViewRepository, userRepository);
     }
 
     @Bean
-    public MethodSecurityExpressionHandler expressionHandler(NumberPermissionEvaluator evaluator) {
+    public MethodSecurityExpressionHandler expressionHandler(AccountIdPermissionEvaluator evaluator) {
         DefaultMethodSecurityExpressionHandler handler = new DefaultMethodSecurityExpressionHandler();
         handler.setPermissionEvaluator(evaluator);
         return handler;

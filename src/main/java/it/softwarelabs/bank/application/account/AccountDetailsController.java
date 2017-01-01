@@ -1,6 +1,8 @@
 package it.softwarelabs.bank.application.account;
 
 import it.softwarelabs.bank.application.domain.account.AccountViewRepository;
+import it.softwarelabs.bank.application.domain.transaction.TransactionViewRepository;
+import it.softwarelabs.bank.domain.account.AccountId;
 import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.transaction.TransactionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,22 +16,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class AccountDetailsController {
 
     private final AccountViewRepository accountViewRepository;
-    private final TransactionRepository transactionRepository;
+    private final TransactionViewRepository transactionViewRepository;
 
     @Autowired
     public AccountDetailsController(
         AccountViewRepository accountViewRepository,
-        TransactionRepository transactionRepository
+        TransactionViewRepository transactionViewRepository
     ) {
         this.accountViewRepository = accountViewRepository;
-        this.transactionRepository = transactionRepository;
+        this.transactionViewRepository = transactionViewRepository;
     }
 
-    @RequestMapping("/account/{number}")
-    @PreAuthorize("hasPermission(#number, 'DISPLAY')")
-    public String details(@PathVariable Number number, Model model) {
-        model.addAttribute("account", accountViewRepository.forNumber(number));
-        model.addAttribute("transactions", transactionRepository.findByAccount(number).all());
+    @RequestMapping("/account/{accountId}")
+    @PreAuthorize("hasPermission(#accountId, 'DISPLAY')")
+    public String details(@PathVariable AccountId accountId, Model model) {
+        model.addAttribute("account", accountViewRepository.forAccountId(accountId));
+        model.addAttribute("transactions", transactionViewRepository.forAccountId(accountId));
+
         return "account/details";
     }
 }

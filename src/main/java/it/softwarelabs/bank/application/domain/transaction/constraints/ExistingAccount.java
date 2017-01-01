@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD})
 @Constraint(validatedBy = ExistingAccountValidator.class)
-public @interface ExistingAccount {
+public @interface ExistingAccount{
 
     String message() default "Account does not exist.";
 

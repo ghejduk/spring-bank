@@ -1,10 +1,10 @@
 package it.softwarelabs.bank.domain.eventstore;
 
-import java.util.List;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
 
 public interface EventStore {
 
-    EventStream loadEventStreamFor(AggregateId id);
+    EventStream loadEventStreamFor(AggregateId id) throws EventStoreException;
 
-    void appendToEventStream(AggregateId id, long expectedVersion, List<Event> events);
+    void appendToEventStream(Aggregate aggregate) throws EventStoreException;
 }

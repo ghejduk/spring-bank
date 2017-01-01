@@ -31,10 +31,10 @@
                 <c:forEach var="transaction" items="${transactions}">
                     <tr>
                         <td>${transaction.id}</td>
-                        <td>${transaction.amount.toDouble()}</td>
+                        <td>${transaction.amount}</td>
                         <td>${transaction.from}</td>
                         <td>${transaction.to}</td>
-                        <td>${transaction.date}</td>
+                        <td>${transaction.createdAt}</td>
                     </tr>
                 </c:forEach>
                 </tbody>

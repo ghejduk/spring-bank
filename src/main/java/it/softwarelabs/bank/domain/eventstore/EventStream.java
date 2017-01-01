@@ -1,6 +1,7 @@
 package it.softwarelabs.bank.domain.eventstore;
 
 import java.util.List;
+import java.util.Objects;
 
 public final class EventStream {
 
@@ -18,5 +19,19 @@ public final class EventStream {
 
     public long version() {
         return version;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof EventStream)) return false;
+        EventStream that = (EventStream) o;
+        return version == that.version &&
+            Objects.equals(events, that.events);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(events, version);
     }
 }

@@ -11,16 +11,18 @@ import java.util.Objects;
 
 public final class AccountWasOpened extends Event {
 
+    private static final long serialVersionUID = 1L;
     private final AccountId accountId;
     private final Number number;
     private final UserId owner;
     private final Money deposit;
 
-    public AccountWasOpened(AccountId accountId, Number number, UserId owner, Money deposit) {
+    public AccountWasOpened(AccountId accountId, Number number, UserId owner, Money deposit, long version) {
         this.accountId = accountId;
         this.number = number;
         this.owner = owner;
         this.deposit = deposit;
+        this.version = version;
     }
 
     public AccountId accountId() {

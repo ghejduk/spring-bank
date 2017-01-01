@@ -1,13 +1,17 @@
 package it.softwarelabs.bank.application.domain.account;
 
+import it.softwarelabs.bank.domain.account.AccountId;
 import it.softwarelabs.bank.domain.account.Number;
 import it.softwarelabs.bank.domain.user.UserId;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
 
@@ -36,15 +40,22 @@ public final class JdbcAccountViewRepository implements AccountViewRepository {
     }
 
     @Override
+    public void updateBalance(AccountId accountId, double balance) {
+        final MapSqlParameterSource paramSource = new MapSqlParameterSource();
+        paramSource.addValue("id", accountId.value());
+        paramSource.addValue("balance", balance);
+
+        jdbcTemplate.update(
+            "UPDATE account SET balance = :balance WHERE id = :id",
+            paramSource
+        );
+    }
+
+    @Override
     public List<AccountView> all() {
         return jdbcTemplate.query(
             "SELECT * FROM account",
-            (rs, rowNum) -> new AccountView(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("number"),
-                rs.getDouble("balance"),
-                UUID.fromString(rs.getString("owner_id"))
-            )
+            new AccountViewRowMapper()
         );
     }
 
@@ -53,12 +64,7 @@ public final class JdbcAccountViewRepository implements AccountViewRepository {
         return jdbcTemplate.query(
             "SELECT * FROM account WHERE owner_id = :ownerId",
             new MapSqlParameterSource("ownerId", id.value()),
-            (rs, rowNum) -> new AccountView(
-                UUID.fromString(rs.getString("id")),
-                rs.getString("number"),
-                rs.getDouble("balance"),
-                UUID.fromString(rs.getString("owner_id"))
-            )
+            new AccountViewRowMapper()
         );
     }
 
@@ -67,12 +73,29 @@ public final class JdbcAccountViewRepository implements AccountViewRepository {
         return jdbcTemplate.queryForObject(
             "SELECT * FROM account WHERE number = :number",
             new MapSqlParameterSource("number", number.toString()),
-            (rs, rowNum) -> new AccountView(
+            new AccountViewRowMapper()
+        );
+    }
+
+    @Override
+    public AccountView forAccountId(AccountId accountId) {
+        return jdbcTemplate.queryForObject(
+            "SELECT * FROM account WHERE id = :id",
+            new MapSqlParameterSource("id", accountId.value()),
+            new AccountViewRowMapper()
+        );
+    }
+
+    private class AccountViewRowMapper implements RowMapper<AccountView> {
+
+        @Override
+        public AccountView mapRow(ResultSet rs, int rowNum) throws SQLException {
+            return new AccountView(
                 UUID.fromString(rs.getString("id")),
                 rs.getString("number"),
                 rs.getDouble("balance"),
                 UUID.fromString(rs.getString("owner_id"))
-            )
-        );
+            );
+        }
     }
 }

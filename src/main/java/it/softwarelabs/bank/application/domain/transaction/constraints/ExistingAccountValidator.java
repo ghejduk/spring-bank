@@ -1,9 +1,10 @@
 package it.softwarelabs.bank.application.domain.transaction.constraints;
 
-import it.softwarelabs.bank.domain.account.Account;
-import it.softwarelabs.bank.domain.account.AccountRepository;
-import it.softwarelabs.bank.domain.account.Number;
+import it.softwarelabs.bank.domain.account.AccountId;
+import it.softwarelabs.bank.domain.eventstore.EventStore;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;
 
 import javax.validation.ConstraintValidator;
@@ -13,11 +14,11 @@ import javax.validation.ConstraintValidatorContext;
 public class ExistingAccountValidator implements ConstraintValidator<ExistingAccount, String> {
 
     private String message;
-    private AccountRepository accountRepository;
+    private final EventStore eventStore;
 
     @Autowired
-    public ExistingAccountValidator(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public ExistingAccountValidator(EventStore eventStore) {
+        this.eventStore = eventStore;
     }
 
     @Override
@@ -31,13 +32,15 @@ public class ExistingAccountValidator implements ConstraintValidator<ExistingAcc
             return true;
         }
 
-        boolean isValid = null != accountRepository.singleByNumber(new Number(number));
+        try {
+            eventStore.loadEventStreamFor(new AccountId(number));
 
-        if (!isValid) {
+            return true;
+        } catch (EventStoreException e) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate(message).addConstraintViolation();
-        }
 
-        return isValid;
+            return false;
+        }
     }
 }

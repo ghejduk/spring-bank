@@ -2,27 +2,23 @@ package it.softwarelabs.bank.application.transaction;
 
 import it.softwarelabs.bank.application.domain.transaction.constraints.CheckBalance;
 import it.softwarelabs.bank.application.domain.transaction.constraints.ExistingAccount;
-import it.softwarelabs.bank.application.domain.transaction.constraints.PrincipalAccount;
 import it.softwarelabs.constraints.FieldMatch;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @FieldMatch.List({
-        @FieldMatch(field = "receiver", matchWith = "sender", inverse = true,
-                message = "You have to transfer funds to another account.")
+    @FieldMatch(field = "receiver", matchWith = "sender", inverse = true,
+        message = "You have to transfer funds to another account.")
 })
 @CheckBalance(accountField = "sender", amountField = "amount")
 public class TransactionForm {
 
-    @Size(min = 6, max = 6, message = "Account number must be six chars long.")
     @NotNull
     @ExistingAccount
-    @PrincipalAccount
+//    @PrincipalAccount
     protected String sender;
 
-    @Size(min = 6, max = 6, message = "Account number must be six chars long.")
     @NotNull
     @ExistingAccount
     protected String receiver;

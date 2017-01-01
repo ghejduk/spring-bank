@@ -2,34 +2,31 @@ package it.softwarelabs.bank.domain.transaction;
 
 import it.softwarelabs.bank.domain.account.Account;
 import it.softwarelabs.bank.domain.account.AccountException;
-import it.softwarelabs.bank.domain.account.AccountRepository;
-import it.softwarelabs.bank.domain.stereotype.Service;
+import it.softwarelabs.bank.domain.eventstore.EventStore;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
 
-@Service
 public final class BookTransaction {
 
-    private AccountRepository accountRepository;
-    private TransactionRepository transactionRepository;
+    private final EventStore eventStore;
 
-    public BookTransaction(AccountRepository accountRepository, TransactionRepository transactionRepository) {
-        this.accountRepository = accountRepository;
-        this.transactionRepository = transactionRepository;
+    public BookTransaction(EventStore eventStore) {
+        this.eventStore = eventStore;
     }
 
     public void book(Transaction transaction) throws BookingFailed {
-        Account sender = accountRepository.singleByNumber(transaction.getFrom());
-        Account recipient = accountRepository.singleByNumber(transaction.getTo());
-
         try {
-            sender.bookTransaction(transaction);
-            recipient.bookTransaction(transaction);
-            transaction.complete();
-        } catch (AccountException | TransactionAlreadyCompleted e) {
-            throw new BookingFailed("Could not book transaction " + transaction.getId(), e);
-        }
+            Account accountFrom = new Account(eventStore.loadEventStreamFor(transaction.from()));
+            Account accountTo = new Account(eventStore.loadEventStreamFor(transaction.to()));
 
-        accountRepository.update(sender);
-        accountRepository.update(recipient);
-        transactionRepository.update(transaction);
+            accountFrom.bookTransaction(transaction);
+            accountTo.bookTransaction(transaction);
+            transaction.complete();
+
+            eventStore.appendToEventStream(accountFrom);
+            eventStore.appendToEventStream(accountTo);
+            eventStore.appendToEventStream(transaction);
+        } catch (EventStoreException | AccountException | TransactionAlreadyCompleted e) {
+            throw new BookingFailed("Could not complete booking.", e);
+        }
     }
 }

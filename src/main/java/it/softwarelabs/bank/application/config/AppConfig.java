@@ -2,10 +2,13 @@ package it.softwarelabs.bank.application.config;
 
 import it.softwarelabs.bank.application.domain.account.AccountPrediction;
 import it.softwarelabs.bank.application.domain.account.AccountViewRepository;
+import it.softwarelabs.bank.application.domain.transaction.TransactionPrediction;
+import it.softwarelabs.bank.application.domain.transaction.TransactionViewRepository;
 import it.softwarelabs.bank.domain.account.AccountRepository;
 import it.softwarelabs.bank.domain.eventbus.EventBus;
 import it.softwarelabs.bank.domain.eventbus.EventSubscriber;
 import it.softwarelabs.bank.domain.eventbus.SimpleEventBus;
+import it.softwarelabs.bank.domain.eventstore.EventStore;
 import it.softwarelabs.bank.domain.stereotype.Factory;
 import it.softwarelabs.bank.domain.stereotype.Service;
 import it.softwarelabs.bank.domain.transaction.BookTransaction;
@@ -85,9 +88,8 @@ public class AppConfig {
     }
 
     @Bean
-    public BookTransaction bookTransaction(AccountRepository accountRepository,
-                                           TransactionRepository transactionRepository) {
-        return new BookTransaction(accountRepository, transactionRepository);
+    public BookTransaction bookTransaction(EventStore eventStore) {
+        return new BookTransaction(eventStore);
     }
 
     @Bean
@@ -102,6 +104,11 @@ public class AppConfig {
     @Bean
     public AccountPrediction accountPrediction(AccountViewRepository accountViewRepository) {
         return new AccountPrediction(accountViewRepository);
+    }
+
+    @Bean
+    public TransactionPrediction transactionPrediction(TransactionViewRepository transactionViewRepository) {
+        return new TransactionPrediction(transactionViewRepository);
     }
 
     @Bean

@@ -1,8 +1,10 @@
 package it.softwarelabs.bank.application.domain.transaction.constraints;
 
 import it.softwarelabs.bank.domain.account.Account;
-import it.softwarelabs.bank.domain.account.AccountRepository;
+import it.softwarelabs.bank.domain.account.AccountId;
 import it.softwarelabs.bank.domain.account.Number;
+import it.softwarelabs.bank.domain.eventstore.EventStore;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -16,12 +18,13 @@ public class CheckBalanceValidator implements ConstraintValidator<CheckBalance, 
     private String message;
     private String accountField;
     private String amountField;
-    private AccountRepository accountRepository;
+    private final EventStore eventStore;
 
     @Autowired
-    public CheckBalanceValidator(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public CheckBalanceValidator(EventStore eventStore) {
+        this.eventStore = eventStore;
     }
+
 
     @Override
     public void initialize(CheckBalance constraintAnnotation) {
@@ -35,17 +38,17 @@ public class CheckBalanceValidator implements ConstraintValidator<CheckBalance, 
         try {
             Field number = object.getClass().getDeclaredField(accountField);
             number.setAccessible(true);
-            String accountNumber = (String) number.get(object);
+            String accountId = (String) number.get(object);
 
             Field amount = object.getClass().getDeclaredField(amountField);
             amount.setAccessible(true);
             Object requestedAmount = amount.get(object);
 
-            if (requestedAmount == null || accountNumber == null || accountNumber.length() == 0) {
+            if (requestedAmount == null || accountId == null || accountId.length() == 0) {
                 return true;
             }
 
-            Account account = accountRepository.singleByNumber(new Number(accountNumber));
+            Account account = new Account(eventStore.loadEventStreamFor(new AccountId(accountId)));
             Double accountBalance = account.getBalance().toDouble();
             boolean result = accountBalance >= Double.valueOf(requestedAmount.toString());
 
@@ -57,7 +60,7 @@ public class CheckBalanceValidator implements ConstraintValidator<CheckBalance, 
             }
 
             return result;
-        } catch (NoSuchFieldException | IllegalAccessException e) {
+        } catch (NoSuchFieldException | IllegalAccessException | EventStoreException e) {
             throw new RuntimeException("Could not access properties", e);
         }
     }

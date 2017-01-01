@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import java.util.UUID;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertSame;
 
@@ -13,7 +14,7 @@ public class TransactionIdTest {
     public void isImmutable() {
         String id = UUID.randomUUID().toString();
         TransactionId transactionId = new TransactionId(id);
-        assertSame(id, transactionId.toString());
+        assertEquals(id, transactionId.toString());
     }
 
     @Test

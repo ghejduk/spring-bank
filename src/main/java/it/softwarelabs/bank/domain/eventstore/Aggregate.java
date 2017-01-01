@@ -4,5 +4,11 @@ import java.util.List;
 
 public interface Aggregate {
 
-    List<Event> producedEvents();
+    AggregateId id();
+
+    List<Event> events();
+
+    void clearEvents();
+
+    long version();
 }

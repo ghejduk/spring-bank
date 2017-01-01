@@ -1,6 +1,8 @@
 package it.softwarelabs.bank.domain.account;
 
-public final class Balance {
+import java.io.Serializable;
+
+public final class Balance implements Serializable {
 
     private Double value;
 
@@ -13,5 +15,10 @@ public final class Balance {
 
     public Double toDouble() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return value.toString();
     }
 }

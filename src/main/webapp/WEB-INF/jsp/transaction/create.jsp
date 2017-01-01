@@ -23,7 +23,7 @@
 
                         <form:select path="sender" name="sender" cssClass="form-control">
                             <form:option value="" label="--- Select ---"/>
-                            <form:options items="${accounts}" itemLabel="number" itemValue="number"/>
+                            <form:options items="${accounts}" itemLabel="number" itemValue="id"/>
                         </form:select>
 
                         <c:if test="${senderHasErrors}">
@@ -34,7 +34,12 @@
                     <c:if test="${resultIsSet && bindingResult.hasFieldErrors('receiver')}" var="receiverHasErrors"/>
                     <div class="form-group<c:if test="${receiverHasErrors}"> has-error</c:if>">
                         <label for="receiver">Receiver:</label>
-                        <form:input path="receiver" name="receiver" cssClass="form-control"/>
+
+                        <form:select path="receiver" name="receiver" cssClass="form-control">
+                            <form:option value="" label="--- Select ---"/>
+                            <form:options items="${accounts}" itemLabel="number" itemValue="id"/>
+                        </form:select>
+
                         <c:if test="${receiverHasErrors}">
                             <p class="text-danger"><form:errors path="receiver"/></p>
                         </c:if>

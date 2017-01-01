@@ -1,10 +1,9 @@
 package it.softwarelabs.bank.application.domain.eventstore;
 
 import it.softwarelabs.bank.domain.eventbus.EventBus;
-import it.softwarelabs.bank.domain.eventstore.AggregateId;
-import it.softwarelabs.bank.domain.eventstore.Event;
-import it.softwarelabs.bank.domain.eventstore.EventStore;
-import it.softwarelabs.bank.domain.eventstore.EventStream;
+import it.softwarelabs.bank.domain.eventstore.*;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStoreException;
+import it.softwarelabs.bank.domain.eventstore.exception.EventStreamIsEmpty;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -30,11 +29,16 @@ public final class JdbcEventStore implements EventStore {
         this.eventBus = eventBus;
     }
 
-    public EventStream loadEventStreamFor(AggregateId id) {
+    public EventStream loadEventStreamFor(AggregateId id) throws EventStoreException {
         final List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-            "SELECT version, event_body FROM event_store WHERE aggregate_id = :uuid ORDER BY version ASC",
+            "SELECT version, event_body FROM event_store WHERE aggregate_id = ? ORDER BY version ASC",
             id.value()
         );
+
+        if (rows.size() == 0) {
+            throw new EventStreamIsEmpty(id);
+        }
+
         final ArrayList<Event> events = new ArrayList<>();
         long version = 0;
 
@@ -52,10 +56,8 @@ public final class JdbcEventStore implements EventStore {
         return new EventStream(events, version);
     }
 
-    public void appendToEventStream(AggregateId id, long expectedVersion, List<Event> events) {
-        long nextVersion = expectedVersion;
-
-        for (Event event : events) {
+    public void appendToEventStream(Aggregate aggregate) throws EventStoreException {
+        for (Event event : aggregate.events()) {
             ByteArrayOutputStream bos = new ByteArrayOutputStream();
 
             try {
@@ -70,11 +72,12 @@ public final class JdbcEventStore implements EventStore {
             }
 
             jdbcTemplate.update(
-                "INSERT INTO event_store (aggregate_id, version, occurred_at, event_body) VALUES (?, ?, ?, ?)",
-                id.value(), ++nextVersion, event.emittedAt(), bos.toByteArray()
+                "INSERT INTO event_store (aggregate_id, version, occurred_at, event_body, event_class) VALUES (?, ?, ?, ?, ?)",
+                aggregate.id().value(), event.version(), event.emittedAt(), bos.toByteArray(), event.getClass().getName()
             );
         }
 
-        eventBus.publish(new HashSet<>(events));
+        eventBus.publish(new HashSet<>(aggregate.events()));
+        aggregate.clearEvents();
     }
 }
